@@ -11,6 +11,11 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <!-- GitHub Calendar CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/github-calendar@latest/dist/github-calendar-responsive.css"
+    />
     <style>
       .profile-pic {
         width: 200px;
@@ -92,6 +97,11 @@
         <img src="http://ghchart.rshah.org/haji-fuji" alt="GitHub Contributions">
         <img src="https://github-readme-stats.vercel.app/api?username=haji-fuji&show_icons=true&theme=default" alt="GitHub Stats">
         <img src="https://github-readme-streak-stats.herokuapp.com/?user=haji-fuji&theme=default" alt="GitHub Streak">
+
+        <!-- GitHub Calendar -->
+        <div class="calendar">
+            Loading the data just for you.
+        </div>
       </header>
       <section>
         <div class="tab-container">
@@ -117,6 +127,12 @@
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
+
+    <!-- GitHub Calendar Library -->
+    <script
+      src="https://unpkg.com/github-calendar@latest/dist/github-calendar.min.js">
+    </script>
+
     <script>
       // Load tab content from external files
       function loadTabContent(tabName, filename) {
@@ -135,6 +151,9 @@
         loadTabContent('teaching', 'teaching.html');
         loadTabContent('awards', 'awards.html');
         loadTabContent('japanese', 'japanese.html');
+
+        // Initialize GitHub Calendar with responsive functionality
+        GitHubCalendar(".calendar", "haji-fuji", { responsive: true });
       });
 
       function openTab(evt, tabName) {
