@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Hajime Fujita</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <style>
+      .profile-pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+        border: 3px solid #ddd;
+      }
+      .publication {
+        margin-bottom: 40px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 30px;
+      }
+      .publication:last-child {
+        border-bottom: none;
+      }
+      .pub-image {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        margin-top: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      /* Tab styles */
+      .tab-container {
+        margin-bottom: 30px;
+      }
+      .tab-buttons {
+        display: flex;
+        border-bottom: 2px solid #ddd;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .tab-button {
+        background-color: #f1f1f1;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 20px;
+        transition: 0.3s;
+        font-size: 16px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: -2px;
+      }
+      .tab-button:hover {
+        background-color: #ddd;
+      }
+      .tab-button.active {
+        background-color: #fff;
+        border-bottom: 2px solid #fff;
+        font-weight: bold;
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <img src="images/profile.jpg" alt="Hajime Fujita" class="profile-pic">
+        <h1>Hajime Fujita (Haji)</h1>
+        <p>Ph.D. Candidate in Bioengineering<br>Stanford University</p>
+        <p class="view"><a href="https://scholar.google.com/citations?user=VE06nMMAAAAJ&hl=en">Google Scholar Profile</a></p>
+      </header>
+      <section>
+        <div class="tab-container">
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="openTab(event, 'home')">Home</button>
+            <button class="tab-button" onclick="openTab(event, 'publications')">Publications</button>
+            <button class="tab-button" onclick="openTab(event, 'teaching')">Teaching</button>
+            <button class="tab-button" onclick="openTab(event, 'awards')">Honors & Awards</button>
+            <button class="tab-button" onclick="openTab(event, 'japanese')">日本語</button>
+          </div>
+
+          <!-- Tab content will be loaded here -->
+          <div id="home" class="tab-content active"></div>
+          <div id="publications" class="tab-content"></div>
+          <div id="teaching" class="tab-content"></div>
+          <div id="awards" class="tab-content"></div>
+          <div id="japanese" class="tab-content"></div>
+
+        </div>
+      </section>
+      <footer>
+        <p><small>Hajime Fujita &mdash; Stanford University</small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    <script>
+      // Load tab content from external files
+      function loadTabContent(tabName, filename) {
+        fetch('tabs/' + filename)
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById(tabName).innerHTML = data;
+          })
+          .catch(error => console.error('Error loading tab:', error));
+      }
+
+      // Load all tab contents on page load
+      window.addEventListener('DOMContentLoaded', (event) => {
+        loadTabContent('home', 'home.html');
+        loadTabContent('publications', 'publications.html');
+        loadTabContent('teaching', 'teaching.html');
+        loadTabContent('awards', 'awards.html');
+        loadTabContent('japanese', 'japanese.html');
+      });
+
+      function openTab(evt, tabName) {
+        var i, tabContent, tabButtons;
+
+        // Hide all tab content
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+          tabContent[i].classList.remove("active");
+        }
+
+        // Remove active class from all buttons
+        tabButtons = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tabButtons.length; i++) {
+          tabButtons[i].classList.remove("active");
+        }
+
+        // Show the selected tab and mark button as active
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+      }
+    </script>
+  </body>
+</html>
