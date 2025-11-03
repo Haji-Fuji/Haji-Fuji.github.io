@@ -37,6 +37,49 @@
         border-radius: 5px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       }
+
+      /* Tab styles */
+      .tab-container {
+        margin-bottom: 30px;
+      }
+      .tab-buttons {
+        display: flex;
+        border-bottom: 2px solid #ddd;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+      .tab-button {
+        background-color: #f1f1f1;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 20px;
+        transition: 0.3s;
+        font-size: 16px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        margin-right: 5px;
+        margin-bottom: -2px;
+      }
+      .tab-button:hover {
+        background-color: #ddd;
+      }
+      .tab-button.active {
+        background-color: #fff;
+        border-bottom: 2px solid #fff;
+        font-weight: bold;
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+      }
     </style>
   </head>
   <body>
@@ -53,92 +96,134 @@
 <!--        </ul>-->
       </header>
       <section>
-        <h2>Biography</h2>
+        <div class="tab-container">
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="openTab(event, 'home')">Home</button>
+            <button class="tab-button" onclick="openTab(event, 'publications')">Publications</button>
+            <button class="tab-button" onclick="openTab(event, 'teaching')">Teaching</button>
+            <button class="tab-button" onclick="openTab(event, 'awards')">Honors & Awards</button>
+          </div>
 
-        <p>I am a Ph.D. candidate in the bioengineering department at Stanford University (since fall 2022). My current advisors are <strong>H. Tom Soh</strong> and <strong>Eric T. Kool</strong>.</p>
+          <!-- Home Tab -->
+          <div id="home" class="tab-content active">
+            <h2>Biography</h2>
 
-        <p>My current research primarily focuses on developing small-molecule-binding aptamers through high-throughput screening and the mechanistic study of aptamer-based biosensors.</p>
+            <p>I am a Ph.D. candidate in the bioengineering department at Stanford University (since fall 2022). My current advisors are <strong>H. Tom Soh</strong> and <strong>Eric T. Kool</strong>.</p>
 
-        <p>I am from Japan, and my name in 漢字 is 藤田 (Fujita) 創 (Hajime).</p>
+            <p>My current research primarily focuses on developing small-molecule-binding aptamers through high-throughput screening and the mechanistic study of aptamer-based biosensors.</p>
 
-        <p>I received a B.E. and M.E. from Tokyo Institute of Technology. My advisor during the B.E. and M.E. programs was <strong>Toshinori Fujie</strong>. Back then, I was fortunate to collaborate with <strong>Michinao Hashimoto</strong> (SUTD).</p>
+            <p>I am from Japan, and my name in 漢字 is 藤田 (Fujita) 創 (Hajime).</p>
 
-        <h2>Education</h2>
+            <p>I received a B.E. and M.E. from Tokyo Institute of Technology. My advisor during the B.E. and M.E. programs was <strong>Toshinori Fujie</strong>. Back then, I was fortunate to collaborate with <strong>Michinao Hashimoto</strong> (SUTD).</p>
 
-        <p><strong>Stanford University</strong> — Stanford, CA<br>
-        <em>Ph.D. student in Bioengineering</em> (GPA: 3.73)<br>
-        September 2022 to Present</p>
+            <h2>Education</h2>
 
-        <p><strong>Tokyo Institute of Technology</strong> — Tokyo, Japan<br>
-        <em>B.Eng. & M.Eng. in Life Science and Technology</em> (GPA: 3.66 & 4.00)<br>
-        March 2020 / September 2021</p>
+            <p><strong>Stanford University</strong> — Stanford, CA<br>
+            <em>Ph.D. student in Bioengineering</em> (GPA: 3.73)<br>
+            September 2022 to Present</p>
 
-        <h2>Selected Publications</h2>
+            <p><strong>Tokyo Institute of Technology</strong> — Tokyo, Japan<br>
+            <em>B.Eng. & M.Eng. in Life Science and Technology</em> (GPA: 3.66 & 4.00)<br>
+            March 2020 / September 2021</p>
+          </div>
 
-        <div class="publication">
-          <p><strong>Fujita, H.</strong>, Wan, L., Gidi, Y., Hein, L. A., Eisenstein, M., & Soh, H. T.<br>
-          "Discovery of high-specificity DNA aptamers for progesterone using a high-throughput array platform."<br>
-          <em>bioRxiv</em> 2025. <a href="https://www.biorxiv.org/content/10.1101/2025.09.13.675901v1">Link</a></p>
-          <img src="images/pub_progesterone.png" alt="Progesterone aptamer study" class="pub-image">
-        </div>
+          <!-- Publications Tab -->
+          <div id="publications" class="tab-content">
+            <h2>Selected Publications</h2>
 
-        <div class="publication">
-          <p>Gidi, Y., Hein, L. A., <strong>Fujita, H.</strong>, Eisenstein, M., & Soh, H. T.<br>
-          "Accelerated Discovery of Aptamer Beacons via Massively Parallel Screening."<br>
-          <em>bioRxiv</em> 2025. <a href="https://www.biorxiv.org/content/10.1101/2025.07.31.667975v1">Link</a></p>
-          <img src="images/pub_aptamer_beacons.png" alt="Aptamer beacons study" class="pub-image">
-        </div>
+            <div class="publication">
+              <p><strong>Fujita, H.</strong>, Wan, L., Gidi, Y., Hein, L. A., Eisenstein, M., & Soh, H. T.<br>
+              "Discovery of high-specificity DNA aptamers for progesterone using a high-throughput array platform."<br>
+              <em>bioRxiv</em> 2025. <a href="https://www.biorxiv.org/content/10.1101/2025.09.13.675901v1">Link</a></p>
+              <img src="images/pub_progesterone.png" alt="Progesterone aptamer study" class="pub-image">
+            </div>
 
-        <div class="publication">
-          <p><strong>Fujita, H.</strong>, Hao, M., Takeoka, S., Miyahara, Y., Goda, T., & Fujie, T.<br>
-          "Paper-Based Wearable Ammonia Sensor Using Iron(III)-Added PEDOT:PSS."<br>
-          <em>Advanced Materials Technologies</em> 2022, 2101486. <a href="https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/admt.202101486">Link</a></p>
-          <img src="images/pub_ammonia_sensor.png" alt="Ammonia sensor" class="pub-image">
-        </div>
+            <div class="publication">
+              <p>Gidi, Y., Hein, L. A., <strong>Fujita, H.</strong>, Eisenstein, M., & Soh, H. T.<br>
+              "Accelerated Discovery of Aptamer Beacons via Massively Parallel Screening."<br>
+              <em>bioRxiv</em> 2025. <a href="https://www.biorxiv.org/content/10.1101/2025.07.31.667975v1">Link</a></p>
+              <img src="images/pub_aptamer_beacons.png" alt="Aptamer beacons study" class="pub-image">
+            </div>
 
-        <div class="publication">
-          <p><strong>Fujita, H.</strong>, Yamagishi, K., Zhou, W., Tahara, Y., Huang, S. Y., Hashimoto, M., & Fujie, T.<br>
-          "Design and Fabrication of Flexible Glucose Sensing Platform Toward Rapid Battery-free Detection of Hyperglycemia."<br>
-          <em>Journal of Materials Chemistry C</em> 2021, 9, 7336-7344. <a href="https://pubs.rsc.org/en/content/articlelanding/2021/tc/d1tc00667c/unauth">Link</a></p>
-          <img src="images/pub_glucose_sensor.png" alt="Glucose sensor" class="pub-image">
-        </div>
+            <div class="publication">
+              <p><strong>Fujita, H.</strong>, Hao, M., Takeoka, S., Miyahara, Y., Goda, T., & Fujie, T.<br>
+              "Paper-Based Wearable Ammonia Sensor Using Iron(III)-Added PEDOT:PSS."<br>
+              <em>Advanced Materials Technologies</em> 2022, 2101486. <a href="https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/admt.202101486">Link</a></p>
+              <img src="images/pub_ammonia_sensor.png" alt="Ammonia sensor" class="pub-image">
+            </div>
 
-        <div class="publication">
-          <p>Saito, M., Kanai, E., <strong>Fujita, H.</strong>, Aso, T., Matsutani, N., & Fujie, T.<br>
-          "Flexible Induction Heater Based on the Polymeric Thin Film for Local Thermotherapy."<br>
-          <em>Advanced Functional Materials</em> 2021, 31, 32, 2102444. <a href="https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/adfm.202102444">Link</a></p>
-          <img src="images/pub_induction_heater.png" alt="Induction heater" class="pub-image">
-        </div>
+            <div class="publication">
+              <p><strong>Fujita, H.</strong>, Yamagishi, K., Zhou, W., Tahara, Y., Huang, S. Y., Hashimoto, M., & Fujie, T.<br>
+              "Design and Fabrication of Flexible Glucose Sensing Platform Toward Rapid Battery-free Detection of Hyperglycemia."<br>
+              <em>Journal of Materials Chemistry C</em> 2021, 9, 7336-7344. <a href="https://pubs.rsc.org/en/content/articlelanding/2021/tc/d1tc00667c/unauth">Link</a></p>
+              <img src="images/pub_glucose_sensor.png" alt="Glucose sensor" class="pub-image">
+            </div>
 
-        <div class="publication">
-          <p>Takuma, M., <strong>Fujita, H.</strong>, Zushi, N., Nagano, H., Azuma, R., Kiyosawa, T., & Fujie, T.<br>
-          "An Intrinsically Semi-Permeable PDMS Nanosheet Encapsulating Adipose Tissue-Derived Stem Cells."<br>
-          <em>Biomaterials Science</em> 2024, 12, 3401-3410. <a href="https://pubs.rsc.org/en/content/articlelanding/2024/bm/d4bm00460d/unauth">Link</a></p>
-          <img src="images/pub_pdms_nanosheet.png" alt="PDMS nanosheet" class="pub-image">
-        </div>
+            <div class="publication">
+              <p>Saito, M., Kanai, E., <strong>Fujita, H.</strong>, Aso, T., Matsutani, N., & Fujie, T.<br>
+              "Flexible Induction Heater Based on the Polymeric Thin Film for Local Thermotherapy."<br>
+              <em>Advanced Functional Materials</em> 2021, 31, 32, 2102444. <a href="https://advanced.onlinelibrary.wiley.com/doi/full/10.1002/adfm.202102444">Link</a></p>
+              <img src="images/pub_induction_heater.png" alt="Induction heater" class="pub-image">
+            </div>
 
-        <h2>Teaching</h2>
+            <div class="publication">
+              <p>Takuma, M., <strong>Fujita, H.</strong>, Zushi, N., Nagano, H., Azuma, R., Kiyosawa, T., & Fujie, T.<br>
+              "An Intrinsically Semi-Permeable PDMS Nanosheet Encapsulating Adipose Tissue-Derived Stem Cells."<br>
+              <em>Biomaterials Science</em> 2024, 12, 3401-3410. <a href="https://pubs.rsc.org/en/content/articlelanding/2024/bm/d4bm00460d/unauth">Link</a></p>
+              <img src="images/pub_pdms_nanosheet.png" alt="PDMS nanosheet" class="pub-image">
+            </div>
+          </div>
 
-        <p><strong>BIOE 123: Bioengineering Systems Prototyping Lab</strong> (Stanford University) — 2024 & 2025<br>
-        Led hands-on lab sessions, mentoring students in medical device prototyping and circuit design</p>
+          <!-- Teaching Tab -->
+          <div id="teaching" class="tab-content">
+            <h2>Teaching</h2>
 
-        <h2>Honors & Awards</h2>
+            <p><strong>BIOE 123: Bioengineering Systems Prototyping Lab</strong> (Stanford University) — 2024 & 2025<br>
+            Led hands-on lab sessions, mentoring students in medical device prototyping and circuit design</p>
+          </div>
 
-        <ul>
-          <li><strong>Stanford Graduate Fellowship</strong> — September 2022 to August 2025</li>
-          <li><strong>Funai Overseas Scholarship</strong> — September 2022 to August 2024</li>
+          <!-- Awards Tab -->
+          <div id="awards" class="tab-content">
+            <h2>Honors & Awards</h2>
+
+            <ul>
+              <li><strong>Stanford Graduate Fellowship</strong> — September 2022 to August 2025</li>
+              <li><strong>Funai Overseas Scholarship</strong> — September 2022 to August 2024</li>
 <!--          <li><strong>iGEM Gold Medals</strong> — 2016 & 2017</li>-->
 <!--          <li><strong>Half-Year Academic Acceleration of Master's Program</strong> — September 2021<br>-->
 <!--          Success ratio ~1%, granted due to outstanding achievements</li>-->
 <!--          <li><strong>Tokyo Institute of Technology Award for Student Leadership</strong> — November 2019<br>-->
 <!--          Success ratio ~1%</li>-->
-        </ul>
+            </ul>
+          </div>
 
+        </div>
       </section>
       <footer>
         <p><small>Hajime Fujita &mdash; Stanford University</small></p>
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
+    <script>
+      function openTab(evt, tabName) {
+        var i, tabContent, tabButtons;
+
+        // Hide all tab content
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+          tabContent[i].classList.remove("active");
+        }
+
+        // Remove active class from all buttons
+        tabButtons = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tabButtons.length; i++) {
+          tabButtons[i].classList.remove("active");
+        }
+
+        // Show the selected tab and mark button as active
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+      }
+    </script>
   </body>
 </html>
