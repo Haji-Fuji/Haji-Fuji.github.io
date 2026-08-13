@@ -32,6 +32,75 @@
     max-width: 900px;
     line-height: 1.5;
   }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+    max-width: 1100px;
+  }
+  .filter-section { flex: 1 1 auto; }
+  .filter-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .filter-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-btn {
+    padding: 5px 13px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--header-bg); color: var(--header-bg); }
+  .filter-btn.active {
+    background: var(--header-bg);
+    border-color: var(--header-bg);
+    color: #fff;
+  }
+
+  .sort-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+  .sort-section label {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .sort-section select {
+    padding: 6px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    background: #fff;
+    color: var(--text);
+  }
+
+  .result-count {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 10px 0;
+    max-width: 1100px;
+  }
+
+  /* Table */
   table {
     border-collapse: collapse;
     width: 100%;
@@ -53,18 +122,17 @@
     vertical-align: middle;
     font-size: 14px;
   }
-  tbody tr:nth-child(even) {
-    background: var(--row-alt);
-  }
+  tbody tr:nth-child(even) { background: var(--row-alt); }
+  tbody tr { transition: background 0.1s; }
+  tbody tr:hover { background: #eaf3f7; }
+
   td.num {
     text-align: center;
     color: var(--muted);
     width: 36px;
+    font-size: 12px;
   }
-  td.name strong {
-    display: block;
-    font-size: 15px;
-  }
+  td.name strong { display: block; font-size: 15px; }
   td.name span {
     display: block;
     font-style: italic;
@@ -76,24 +144,27 @@
   td.product-num {
     font-family: "SF Mono", Menlo, Consolas, monospace;
     white-space: nowrap;
+    font-size: 13px;
   }
-  td.structure {
-    text-align: center;
-    width: 300px;
-  }
+  td.structure { text-align: center; width: 280px; }
   td.structure img {
-    max-width: 280px;
-    max-height: 160px;
+    max-width: 240px;
+    max-height: 140px;
     display: block;
     margin: 0 auto 6px auto;
   }
-  td.structure a {
+  td.structure a { font-size: 12px; color: var(--header-bg); }
+  td.category { width: 150px; }
+  .cat-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
     font-size: 12px;
-    color: var(--header-bg);
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
   }
-  td.stock {
-    width: 130px;
-  }
+  td.stock { width: 130px; }
   td.stock input {
     width: 90%;
     padding: 6px 8px;
@@ -108,6 +179,14 @@
     color: var(--muted);
     max-width: 900px;
   }
+
+  #empty-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 14px;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -116,9 +195,39 @@
 <p class="subtitle">
   Structure images and product info pulled from
   <a href="https://www.glenresearch.com" target="_blank" rel="noopener">Glen Research</a>.
-  Images below are loaded directly from glenresearch.com, so an internet connection is needed to see them.
-  Enter your stock count in the last column — it's remembered in this browser until you clear site data.
+  Images are loaded directly from glenresearch.com — an internet connection is needed to see them.
+  Edit the stock count in the last column; values are remembered in this browser until you clear site data.
 </p>
+
+<div class="controls">
+  <div class="filter-section">
+    <span class="filter-label">Filter by category</span>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="fluorophore and quencher">Fluorophore &amp; Quencher</button>
+      <button class="filter-btn" data-cat="biotin">Biotin</button>
+      <button class="filter-btn" data-cat="spacer">Spacer</button>
+      <button class="filter-btn" data-cat="amino">Amino</button>
+      <button class="filter-btn" data-cat="thiol">Thiol</button>
+      <button class="filter-btn" data-cat="other">Other</button>
+      <button class="filter-btn" data-cat="rna">RNA</button>
+      <button class="filter-btn" data-cat="native">Native DNA</button>
+    </div>
+  </div>
+  <div class="sort-section">
+    <label for="sort-select">Sort by</label>
+    <select id="sort-select">
+      <option value="default">Default order</option>
+      <option value="name">Name (A–Z)</option>
+      <option value="product">Product # (asc)</option>
+      <option value="stock-asc">Stock: Low → High</option>
+      <option value="stock-desc">Stock: High → Low</option>
+      <option value="category">Category</option>
+    </select>
+  </div>
+</div>
+
+<p class="result-count" id="result-count"></p>
 
 <table>
   <thead>
@@ -127,49 +236,12 @@
       <th>Name</th>
       <th>Product #</th>
       <th>Chemical Structure</th>
+      <th>Category</th>
       <th>Number in Stock</th>
     </tr>
   </thead>
   <tbody id="inventory-body">
-    <tr data-key="10-1953">
-      <td class="num">1</td>
-      <td class="name">
-        <strong>Biotin Phosphoramidite</strong>
-        <span>1-Dimethoxytrityloxy-2-(N-biotinyl-4-aminobutyl)-propyl-3-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite</span>
-      </td>
-      <td class="product-num">10-1953</td>
-      <td class="structure">
-        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1953_k1rxa33prakgwqmf.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="Biotin Phosphoramidite structure">
-        <a href="https://www.glenresearch.com/biotin-labeling/biotin-phosphoramidite10-1953.html" target="_blank" rel="noopener">Product page ↗</a>
-      </td>
-      <td class="stock"><input type="number" min="0" placeholder="0"></td>
-    </tr>
-    <tr data-key="10-1000">
-      <td class="num">2</td>
-      <td class="name">
-        <strong>dA-CE Phosphoramidite</strong>
-        <span>5'-Dimethoxytrityl-N-benzoyl-2'-deoxyAdenosine,3'-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite</span>
-      </td>
-      <td class="product-num">10-1000</td>
-      <td class="structure">
-        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1000_pfvptd8aq7y7yufb.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="dA-CE Phosphoramidite structure">
-        <a href="https://www.glenresearch.com/dna-phosphoramidites/da-ce-phosphoramidite10-1000.html" target="_blank" rel="noopener">Product page ↗</a>
-      </td>
-      <td class="stock"><input type="number" min="0" placeholder="0"></td>
-    </tr>
-    <tr data-key="10-1030">
-      <td class="num">3</td>
-      <td class="name">
-        <strong>dT-CE Phosphoramidite</strong>
-        <span>5'-Dimethoxytrityl-2'-deoxyThymidine,3'-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite</span>
-      </td>
-      <td class="product-num">10-1030</td>
-      <td class="structure">
-        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1030_c25wwhg3z7dibpin.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="dT-CE Phosphoramidite structure">
-        <a href="https://www.glenresearch.com/structural-studies/dt-ce-phosphoramidite10-1030.html" target="_blank" rel="noopener">Product page ↗</a>
-      </td>
-      <td class="stock"><input type="number" min="0" placeholder="0"></td>
-    </tr>
+    <tr id="empty-msg"><td colspan="6">No reagents match the selected filter.</td></tr>
   </tbody>
 </table>
 
@@ -178,18 +250,581 @@
 </footer>
 
 <script>
-  // Persist stock counts locally so the page remembers values between visits.
-  const STORAGE_KEY = "phosphoramidite-stock-counts";
-  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  document.querySelectorAll("#inventory-body tr").forEach(row => {
-    const key = row.getAttribute("data-key");
-    const input = row.querySelector("input");
-    if (stored[key] !== undefined) input.value = stored[key];
-    input.addEventListener("input", () => {
-      stored[key] = input.value;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+const CATEGORY_LABELS = {
+  "fluorophore and quencher": "Fluorophore & Quencher",
+  "biotin": "Biotin",
+  "spacer": "Spacer",
+  "amino": "Amino",
+  "thiol": "Thiol",
+  "other": "Other",
+  "rna": "RNA",
+  "native": "Native DNA"
+};
+
+const CATEGORY_COLORS = {
+  "fluorophore and quencher": "#b03a8f",
+  "biotin": "#c0620d",
+  "spacer": "#2e7d5e",
+  "amino": "#1a6fa0",
+  "thiol": "#7b3fa0",
+  "other": "#5a6472",
+  "rna": "#1a7f80",
+  "native": "#3a4d99"
+};
+
+const PRODUCTS = [
+  // Fluorophore & Quencher
+  {
+    productNum: "10-5913",
+    shortName: "Cyanine 3 Phosphoramidite",
+    chemicalName: "1-[3-(4-monomethoxytrityloxy)propyl]-1’-[3-[(2-cyanoethyl)-(N,N-diisopropyl)phosphoramidityl]propyl]-3,3,3’,3’-tetramethylindocarbocyanine chloride",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5913_hqgtsh2akoep6e6h_zewkuyopn7skpdd9.png",
+    pageUrl: "https://www.glenresearch.com/fluorophores/cyanine-3-phosphoramidite10-5913.html",
+    category: "fluorophore and quencher", defaultStock: 9
+  },
+  {
+    productNum: "10-5915",
+    shortName: "Cyanine 5 Phosphoramidite",
+    chemicalName: "1-[3-(4-monomethoxytrityloxy)propyl]-1’-[3-[(2-cyanoethyl)-(N,N-diisopropylphosphoramidityl]propyl]-3,3,3’,3’-tetramethylindodicarbocyanine chloride",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5915_qubgx47bspy1eg59_6m9tv92vviqgl2qa.png",
+    pageUrl: "https://www.glenresearch.com/fluorophores/cyanine-5-phosphoramidite10-5915.html",
+    category: "fluorophore and quencher", defaultStock: 2
+  },
+  {
+    productNum: "10-5942",
+    shortName: "BHQ-2-dT",
+    chemicalName: "5’-Dimethoxytrityloxy-5-[(N-4’’-carboxyethyl-4’’-(N-ethyl)-4’-(4-Nitro-phenyldiazo)-2’-methoxy-5’-methoxy-azobenzene)-aminohexyl-3-acrylimido]-2’-deoxyUridine-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5942_fsjiiir2mdmtwk7e_0bvivatzvzc0iqqa.png",
+    pageUrl: "https://www.glenresearch.com/quenchers/bhq-2-dt10-5942.html",
+    category: "fluorophore and quencher", defaultStock: 2
+  },
+  {
+    productNum: "10-5912",
+    shortName: "5’-Dabcyl Phosphoramidite",
+    chemicalName: "6-(N-4’-carboxy-4-(dimethylamino)azobenzene)-aminohexyl-1-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5912_tjl5kahh5jhbzwmx_5fd37xjduoenl3ua.png",
+    pageUrl: "https://www.glenresearch.com/quenchers/5-dabcyl-phosphoramidite10-5912.html",
+    category: "fluorophore and quencher", defaultStock: 3
+  },
+  {
+    productNum: "10-5931",
+    shortName: "5’-BHQ-1 Phosphoramidite",
+    chemicalName: "4’-(2-Nitro-4-toluyldiazo)-2’-methoxy-5’-methyl-azobenzene-4’’-(N-ethyl)-N-ethyl-2-cyanoethyl-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5931_pn1idpzc1b9wlumo_pn1h4harhkie1qop.png",
+    pageUrl: "https://www.glenresearch.com/quenchers/5-bhq-1-phosphoramidite10-5931.html",
+    category: "fluorophore and quencher", defaultStock: 3
+  },
+  {
+    productNum: "10-5915",
+    shortName: "Cyanine 5 Phosphoramidite",
+    chemicalName: "1-[3-(4-monomethoxytrityloxy)propyl]-1’-[3-[(2-cyanoethyl)-(N,N-diisopropylphosphoramidityl]propyl]-3,3,3’,3’-tetramethylindodicarbocyanine chloride",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5915_qubgx47bspy1eg59_6m9tv92vviqgl2qa.png",
+    pageUrl: "https://www.glenresearch.com/fluorophores/cyanine-5-phosphoramidite10-5915.html",
+    category: "fluorophore and quencher", defaultStock: 3
+  },
+  {
+    productNum: "10-5901",
+    shortName: "5’-Fluorescein Phosphoramidite",
+    chemicalName: "6-(3’,6’-dipivaloylfluoresceinyl-6-carboxamido)-hexyl-1-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5901_6pvx8kfbk1eejghi_brcpt5grl8ei6nmk.png",
+    pageUrl: "https://www.glenresearch.com/fluorophores/5-fluorescein-phosphoramidite10-5901.html",
+    category: "fluorophore and quencher", defaultStock: 5
+  },
+  {
+    productNum: "10-1058",
+    shortName: "Dabcyl-dT",
+    chemicalName: "5’-Dimethoxytrityloxy-5-[(N-4’-carboxy-4-(dimethylamino)-azobenzene)-aminohexyl-3-acrylimido]-2’-deoxyUridine-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1058_lunaukgmmoy5hrxr.png",
+    pageUrl: "https://www.glenresearch.com/quenchers/dabcyl-dt10-1058.html",
+    category: "fluorophore and quencher", defaultStock: 2
+  },
+  {
+    productNum: "10-1964",
+    shortName: "6-Fluorescein Phosphoramidite",
+    chemicalName: "2-Dimethoxytrityloxymethyl-6-(3’,6’-dipivaloylfluorescein-6-yl-carboxamido)-hexyl-1-O-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1964_paegbizajqhjpifn.png",
+    pageUrl: "https://www.glenresearch.com/fluorophores/6-fluorescein-phosphoramidite10-1964.html",
+    category: "fluorophore and quencher", defaultStock: 1
+  },
+  // Biotin
+  {
+    productNum: "10-1952",
+    shortName: "DesthiobiotinTEG Phosphoramidite",
+    chemicalName: "1-Dimethoxytrityloxy-3-O-(N-desthiobiotinyl-3-aminopropyl)-triethyleneglycolyl-glyceryl-2-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1952_rg7ruidpwmwk8ilb.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/desthiobiotinteg-phosphoramidite10-1952.html",
+    category: "biotin", defaultStock: 1
+  },
+  {
+    productNum: "10-1953",
+    shortName: "Biotin Phosphoramidite",
+    chemicalName: "1-Dimethoxytrityloxy-2-(N-biotinyl-4-aminobutyl)-propyl-3-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1953_k1rxa33prakgwqmf.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/biotin-phosphoramidite10-1953.html",
+    category: "biotin", defaultStock: 9
+  },
+  {
+    productNum: "10-1038",
+    shortName: "Biotin-dT",
+    chemicalName: "5’-Dimethoxytrityloxy-5-[N-((4-t-butylbenzoyl)-biotinyl)-aminohexyl)-3-acrylimido]-2’-deoxyUridine-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1038_dmw0faopkdxar68w.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/biotin-dt10-1038.html",
+    category: "biotin", defaultStock: 2
+  },
+  {
+    productNum: "10-5950",
+    shortName: "5’-Biotin Phosphoramidite",
+    chemicalName: "[1-N-(4,4’-Dimethoxytrityl)-biotinyl-6-aminohexyl]-2-cyanoethyl-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5950_fyudvttrbfup9fbr_b4jyzk9b68mvff86.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/5-biotin-phosphoramidite10-5950.html",
+    category: "biotin", defaultStock: 4
+  },
+  {
+    productNum: "10-1995",
+    shortName: "Protected BiotinLC Serinol Phosphoramidite",
+    chemicalName: "3-Dimethoxytrityloxy-2-(3-((4-t-butylbenzoyl)-biotinyl-3-aminopropyl)-diethyleneglycolyl-propylamido-glycanoylamido)propyl-1-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1995_h6lqskkk44geyce6.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/protected-biotinlc-serinol-phosphoramidite10-1995.html",
+    category: "biotin", defaultStock: 1
+  },
+  // Spacer
+  {
+    productNum: "10-1918",
+    shortName: "Spacer Phosphoramidite 18",
+    chemicalName: "18-O-Dimethoxytritylhexaethyleneglycol,1-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1918_4zyildgq9tfpudcw.png",
+    pageUrl: "https://www.glenresearch.com/spacer-modifiers/spacer-phosphoramidite-1810-1918.html",
+    category: "spacer", defaultStock: 9
+  },
+  {
+    productNum: "10-1913",
+    shortName: "Spacer Phosphoramidite C3",
+    chemicalName: "3-(4,4’-Dimethoxytrityloxy)propyl-1-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1913_muf3seyx01uoubh6.png",
+    pageUrl: "https://www.glenresearch.com/spacer-modifiers/spacer-phosphoramidite-c310-1913.html",
+    category: "spacer", defaultStock: 3
+  },
+  {
+    productNum: "10-1953",
+    shortName: "Biotin Phosphoramidite",
+    chemicalName: "1-Dimethoxytrityloxy-2-(N-biotinyl-4-aminobutyl)-propyl-3-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1953_k1rxa33prakgwqmf.png",
+    pageUrl: "https://www.glenresearch.com/biotin-labeling/biotin-phosphoramidite10-1953.html",
+    category: "spacer", defaultStock: 2
+  },
+  {
+    productNum: "10-1928",
+    shortName: "Spacer C12 CE Phosphoramidite",
+    chemicalName: "12-(4,4’-Dimethoxytrityloxy)dodecyl-1-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1928_40b4w5p27lk0syii.png",
+    pageUrl: "https://www.glenresearch.com/spacer-modifiers/spacer-c12-ce-phosphoramidite10-1928.html",
+    category: "spacer", defaultStock: 3
+  },
+  // Amino
+  {
+    productNum: "10-1906",
+    shortName: "5’-Amino-Modifier C6",
+    chemicalName: "6-(4-Monomethoxytritylamino)hexyl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1906_vb36y9jnhm7snvzv.png",
+    pageUrl: "https://www.glenresearch.com/thiol-modifiers/5-amino-modifier-c610-1906.html",
+    category: "amino", defaultStock: 5
+  },
+  {
+    productNum: "10-1947",
+    shortName: "5’-Amino-Modifier C6-PDA",
+    chemicalName: "6-(N2-methyl-N1-phthalimidyl)-hexyl-1-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1947_gfiebxwae04izat2.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/5-amino-modifier-c6-pda10-1947.html",
+    category: "amino", defaultStock: 1
+  },
+  {
+    productNum: "10-1916",
+    shortName: "5’-Amino-Modifier C6-TFA",
+    chemicalName: "6-(Trifluoroacetylamino)-hexyl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1916_ibifbiqa7xcbs6ay.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/5-amino-modifier-c6-tfa10-1916.html",
+    category: "amino", defaultStock: 5
+  },
+  {
+    productNum: "10-1039",
+    shortName: "Amino-Modifier C6 dT",
+    chemicalName: "5’-Dimethoxytrityl-5-[N-(trifluoroacetylaminohexyl)-3-acrylimido]-2’-deoxyUridine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1039_wgz4qz9wscejxeiq.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/amino-modifier-c6-dt10-1039.html",
+    category: "amino", defaultStock: 6
+  },
+  {
+    productNum: "10-1089",
+    shortName: "Amino-Modifier C6 dA",
+    chemicalName: "5’-Dimethoxytrityl-N6-benzoyl-N8-[6-(trifluoroacetylamino)-hex-1-yl]-8-amino-2’-deoxyAdenosine-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1089_fnaoskdz5qlpwcyi.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/amino-modifier-c6-da10-1089.html",
+    category: "amino", defaultStock: 2
+  },
+  {
+    productNum: "10-1037",
+    shortName: "Amino-Modifier C2 dT",
+    chemicalName: "5’-Dimethoxytrityl-5-[N-(trifluoroacetylaminoethyl)-3-acrylimido]-2’-deoxyUridine, 3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1037_dsn3q5vnbcq5fruf.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/amino-modifier-c2-dt10-1037.html",
+    category: "amino", defaultStock: 4
+  },
+  {
+    productNum: "10-1019",
+    shortName: "Amino-Modifier C6 dC",
+    chemicalName: "5’-Dimethoxytrityl-N-dimethylformamidine-5-[N-(trifluoroacetylaminohexyl)-3-acrylimido]-2’-deoxyCytidine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1019_eit6zh1a4ly5wmmu.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/amino-modifier-c6-dc10-1019.html",
+    category: "amino", defaultStock: 1
+  },
+  {
+    productNum: "20-2954",
+    shortName: "3’-PT-Amino-Modifier C3 CPG",
+    chemicalName: "N-(3-(O-Dimethoxytrityl)-propyl)-(2-carboxamide)-phthalimidyl-lcaa-CPG",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/2/0/20-2954_zkx5jedvzuywlhwd_hlgpprlqvb4ahdu4.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/3-pt-amino-modifier-c3-cpg20-2954.html",
+    category: "amino", defaultStock: 1
+  },
+  // Thiol
+  {
+    productNum: "10-1936",
+    shortName: "Thiol-Modifier C6 S-S",
+    chemicalName: "1-O-Dimethoxytrityl-hexyl-disulfide,1’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1936_dmqki69h86qmnnbf.png",
+    pageUrl: "https://www.glenresearch.com/thiol-modifiers/thiol-modifier-c6-s-s10-1936.html",
+    category: "thiol", defaultStock: 9
+  },
+  // Other
+  {
+    productNum: "10-2130",
+    shortName: "beta-L-dT-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-beta-L-2’-deoxyThymidine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-2130_1_rzulbt69wmwtp5kz_xr7yamifp46mip5c.png",
+    pageUrl: "https://www.glenresearch.com/beta-l-dna-phosphoramidites/beta-l-dt-ce-phosphoramidite10-2130.html",
+    category: "other", defaultStock: 3
+  },
+  {
+    productNum: "10-1992",
+    shortName: "Alkyne-Modifier Serinol Phosphoramidite",
+    chemicalName: "3-Dimethoxytrityloxy-2-(3-(5-hexynamido)propanamido)propyl-1-O-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1992_ok6mdylmnvv7ln0k.png",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/alkyne-modifier-serinol-phosphoramidite10-1992.html",
+    category: "other", defaultStock: 6
+  },
+  {
+    productNum: "10-1981",
+    shortName: "Asymmetric Doubler (Lev) Phosphoramidite",
+    chemicalName: "1-[5-(4,4’-dimethoxytrityloxy)pentylamido]-3-[5-levulinyloxypentylamido]-propyl-2-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1981_ha78pytxdtdjtnq2_cax97z3x8lwwo4sv.png",
+    pageUrl: "https://www.glenresearch.com/dendrimers-branching/asymmetric-doubler-lev-phosphoramidite10-1981.html",
+    category: "other", defaultStock: 1
+  },
+  {
+    productNum: "10-2101",
+    shortName: "beta-L-Pac-dA-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-phenoxyacetyl-beta-L-2’-deoxyAdenosine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-2101_1_zpcjtpul6wjygpyv_jxi8zox3zymjulqc.png",
+    pageUrl: "https://www.glenresearch.com/beta-l-dna-phosphoramidites/beta-l-pac-da-ce-phosphoramidite10-2101.html",
+    category: "other", defaultStock: 4
+  },
+  {
+    productNum: "10-2115",
+    shortName: "beta-L-Ac-dC-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-acetyl-beta-L-2’-deoxyCytidine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/2/0/20-2115_1_rw69x59vfdhuxjvn_r3sfntorbnpqsjwx.png",
+    pageUrl: "https://www.glenresearch.com/beta-l-dna-phosphoramidites/beta-l-ac-dc-ce-phosphoramidite10-2115.html",
+    category: "other", defaultStock: 4
+  },
+  {
+    productNum: "10-2121",
+    shortName: "beta-L-iPr-Pac-dG-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-p-isopropyl-phenoxyacetyl-beta-L-2’-deoxyGuanosine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-2121_1_jucodiwn7gj1l1jo_ggsjmyxh8zz6zkd1.png",
+    pageUrl: "https://www.glenresearch.com/beta-l-dna-phosphoramidites/beta-l-ipr-pac-dg-ce-phosphoramidite10-2121.html",
+    category: "other", defaultStock: 4
+  },
+  {
+    productNum: "10-1908",
+    shortName: "5’-Hexynyl Phosphoramidite",
+    chemicalName: "5-Hexyn-1-yl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1908_qhgi0llxerpjfg6m.png",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/5-hexynyl-phosphoramidite10-1908.html",
+    category: "other", defaultStock: 3
+  },
+  {
+    productNum: "10-5800",
+    shortName: "Azobenzene Phosphoramidite",
+    chemicalName: "3-O-(Dimethoxytrityl)-2-N-(4-carboxyazobenzene)-D-threonin-1-yl-O-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-5800_swabktefez0mkkfe_mhvbrme7jarsumcm.png",
+    pageUrl: "https://www.glenresearch.com/photo-regulation-cleavage/azobenzene-phosphoramidite10-5800.html",
+    category: "other", defaultStock: 2
+  },
+  {
+    productNum: "10-1534",
+    shortName: "NPOM Caged-dT-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N3-[[1-(6-nitro-1,3-benzodioxol-5-yl)ethoxy]methyl]-2’-deoxyThymidine, 3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1534_fcjbgu0q225evp2w.png",
+    pageUrl: "https://www.glenresearch.com/photo-regulation-cleavage/npom-caged-dt-ce-phosphoramidite10-1534.html",
+    category: "other", defaultStock: 2
+  },
+  {
+    productNum: "10-1901",
+    shortName: "Chemical Phosphorylation Reagent II (CPR II)",
+    chemicalName: "[3-(4,4’-Dimethoxytrityloxy)-2,2-dicarboxyethyl]propyl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1901_tfgdxjvpjysl1gac.png",
+    pageUrl: "https://www.glenresearch.com/chemical-phosphorylation/chemical-phosphorylation-reagent-ii-cpr-ii-10-1901.html",
+    category: "other", defaultStock: 5
+  },
+  {
+    productNum: "10-1907",
+    shortName: "5’-DMS(O)MT-Amino-Modifier C6",
+    chemicalName: "6-(4,4’-Dimethoxy-4’’-methylsulfonyl-tritylamino)hexyl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1907_itj6mitw5mjpgrhq.png",
+    pageUrl: "https://www.glenresearch.com/amino-modifiers/5-dms-o-mt-amino-modifier-c610-1907.html",
+    category: "other", defaultStock: 1
+  },
+  {
+    productNum: "10-1901",
+    shortName: "Chemical Phosphorylation Reagent II (CPR II)",
+    chemicalName: "[3-(4,4’-Dimethoxytrityloxy)-2,2-dicarboxyethyl]propyl-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1901_tfgdxjvpjysl1gac.png",
+    pageUrl: "https://www.glenresearch.com/chemical-phosphorylation/chemical-phosphorylation-reagent-ii-cpr-ii-10-1901.html",
+    category: "other", defaultStock: 3
+  },
+  {
+    productNum: "10-1035",
+    shortName: "Carboxy-dT",
+    chemicalName: "5’-Dimethoxytrityl-5-[3-methyl-acrylate]-2’-deoxyUridine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1035_wqnwig28xxnxxlug.png",
+    pageUrl: "https://www.glenresearch.com/carboxy-modifiers/carboxy-dt10-1035.html",
+    category: "other", defaultStock: 1
+  },
+  {
+    productNum: "10-1998",
+    shortName: "DBCO-Serinol Phosphoramidite",
+    chemicalName: "3-Dimethoxytrityloxy-2-(6-oxo-6-(dibenzo[b,f]azacyclooct-4-yn-1-yl)-capramido)propyl-1-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1998_9sz5opnxrhtwvvau_ao0ilybwujvldxb4.png",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/dbco-serinol-phosphoramidite10-1998.html",
+    category: "other", defaultStock: 2
+  },
+  {
+    productNum: "10-1540",
+    shortName: "C8-Alkyne-dT-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-5-(octa-1,7-diynyl)-2’-deoxyuridine, 3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1540_g2x4ij0pcwtibbzr.png",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/c8-alkyne-dt-ce-phosphoramidite10-1540.html",
+    category: "other", defaultStock: 1
+  },
+  {
+    productNum: "50-1904",
+    shortName: "Azidobutyrate NHS Ester",
+    chemicalName: "4-Azido-butan-1-oic acid N-Hydroxysuccinimide Ester",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/p/5/p50-1904_m9vqat3kzvzfxtju_dbhm1qc9rzgakrlc.gif",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/azidobutyrate-nhs-ester50-1904.html",
+    category: "other", defaultStock: 1
+  },
+  {
+    productNum: "50-1941",
+    shortName: "DBCO-sulfo-NHS Ester",
+    chemicalName: "6-oxo-6-(dibenzo[b,f]azacyclooct-4-yn-1-yl)-caproic acid sulfo-N-hydroxysuccinimide ester, sodium salt",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/5/0/50-1941_7iscvlc3xgtjdmjy_5skgumyhytarbti9.png",
+    pageUrl: "https://www.glenresearch.com/click-chemistry/dbco-sulfo-nhs-ester50-1941.html",
+    category: "other", defaultStock: 1
+  },
+  // RNA
+  {
+    productNum: "10-3024",
+    shortName: "G-TOM-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-acetyl-Guanosine,2’-O-triisopropylsilyloxymethyl-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-3024_gyn3yjhaxvcdmu9y.png",
+    pageUrl: "https://www.glenresearch.com/rna-phosphoramidites/g-tom-ce-phosphoramidite10-3024.html",
+    category: "rna", defaultStock: 1
+  },
+  {
+    productNum: "10-3014",
+    shortName: "C-TOM-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-acetyl-Cytidine,2’-O-triisopropylsilyloxymethyl-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-3014_mgwwatd2rmqfgklb.png",
+    pageUrl: "https://www.glenresearch.com/rna-phosphoramidites/c-tom-ce-phosphoramidite10-3014.html",
+    category: "rna", defaultStock: 1
+  },
+  {
+    productNum: "10-3004",
+    shortName: "A-TOM-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-acetyl-Adenosine, 2’-O-triisopropylsilyloxymethyl-3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-3004_0tk7gdcwu8yrkmqb.png",
+    pageUrl: "https://www.glenresearch.com/rna-phosphoramidites/a-tom-ce-phosphoramidite10-3004.html",
+    category: "rna", defaultStock: 1
+  },
+  // Native DNA
+  {
+    productNum: "10-1050",
+    shortName: "dU-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-2’-deoxyUridine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1050_r1ouflfnjklrttxo.png",
+    pageUrl: "https://www.glenresearch.com/duplex-stability/du-ce-phosphoramidite10-1050.html",
+    category: "native", defaultStock: 1
+  },
+  {
+    productNum: "10-1000",
+    shortName: "dA-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-benzoyl-2’-deoxyAdenosine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1000_pfvptd8aq7y7yufb.png",
+    pageUrl: "https://www.glenresearch.com/dna-phosphoramidites/da-ce-phosphoramidite10-1000.html",
+    category: "native", defaultStock: 1
+  },
+  {
+    productNum: "10-1015",
+    shortName: "Ac-dC-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-acetyl-2’-deoxyCytidine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1015_fqcbwzyf9d0iss07.png",
+    pageUrl: "https://www.glenresearch.com/dna-phosphoramidites/ac-dc-ce-phosphoramidite10-1015.html",
+    category: "native", defaultStock: 1
+  },
+  {
+    productNum: "10-1020",
+    shortName: "dG-CE Phosphoramidite",
+    chemicalName: "5’-Dimethoxytrityl-N-isobutyryl-2’-deoxyGuanosine,3’-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite",
+    imageUrl: "https://www.glenresearch.com/media/catalog/product/1/0/10-1020_pnhlaqrysxhibcot.png",
+    pageUrl: "https://www.glenresearch.com/dna-phosphoramidites/dg-ce-phosphoramidite10-1020.html",
+    category: "native", defaultStock: 1
+  }
+];
+
+const STORAGE_KEY = "phosphoramidite-stock-v2";
+const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+
+let currentFilter = "all";
+let currentSort = "default";
+
+function getStock(i) {
+  return stored[i] !== undefined ? stored[i] : PRODUCTS[i].defaultStock;
+}
+
+function saveStock(i, val) {
+  stored[i] = val;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+}
+
+function getVisibleIndices() {
+  let indices = PRODUCTS.map((_, i) => i);
+  if (currentFilter !== "all") {
+    indices = indices.filter(i => PRODUCTS[i].category === currentFilter);
+  }
+  if (currentSort === "name") {
+    indices.sort((a, b) => PRODUCTS[a].shortName.localeCompare(PRODUCTS[b].shortName));
+  } else if (currentSort === "product") {
+    indices.sort((a, b) => PRODUCTS[a].productNum.localeCompare(PRODUCTS[b].productNum));
+  } else if (currentSort === "stock-asc") {
+    indices.sort((a, b) => Number(getStock(a)) - Number(getStock(b)));
+  } else if (currentSort === "stock-desc") {
+    indices.sort((a, b) => Number(getStock(b)) - Number(getStock(a)));
+  } else if (currentSort === "category") {
+    indices.sort((a, b) => PRODUCTS[a].category.localeCompare(PRODUCTS[b].category) || a - b);
+  }
+  return indices;
+}
+
+function render() {
+  const indices = getVisibleIndices();
+  const tbody = document.getElementById("inventory-body");
+  tbody.innerHTML = "";
+
+  if (indices.length === 0) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No reagents match the selected filter.</td>`;
+    tbody.appendChild(row);
+  } else {
+    indices.forEach((rowIndex, displayIndex) => {
+      const p = PRODUCTS[rowIndex];
+      const catLabel = CATEGORY_LABELS[p.category] || p.category;
+      const catColor = CATEGORY_COLORS[p.category] || "#7f8c8d";
+      const stockVal = getStock(rowIndex);
+      const imgParams = p.imageUrl.endsWith(".gif")
+        ? "?optimize=medium&fit=bounds&height=400&width=400"
+        : "?optimize=medium&fit=bounds&height=400&width=400&format=png";
+
+      const tr = document.createElement("tr");
+
+      const numTd = document.createElement("td");
+      numTd.className = "num";
+      numTd.textContent = displayIndex + 1;
+
+      const nameTd = document.createElement("td");
+      nameTd.className = "name";
+      const strong = document.createElement("strong");
+      strong.textContent = p.shortName;
+      const span = document.createElement("span");
+      span.textContent = p.chemicalName;
+      nameTd.appendChild(strong);
+      nameTd.appendChild(span);
+
+      const productNumTd = document.createElement("td");
+      productNumTd.className = "product-num";
+      productNumTd.textContent = p.productNum;
+
+      const structureTd = document.createElement("td");
+      structureTd.className = "structure";
+      const img = document.createElement("img");
+      img.src = p.imageUrl + imgParams;
+      img.alt = p.shortName + " structure";
+      img.onerror = function() { this.style.display = "none"; };
+      const link = document.createElement("a");
+      link.href = p.pageUrl;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "Product page ↗";
+      structureTd.appendChild(img);
+      structureTd.appendChild(link);
+
+      const catTd = document.createElement("td");
+      catTd.className = "category";
+      const badge = document.createElement("span");
+      badge.className = "cat-badge";
+      badge.style.background = catColor;
+      badge.textContent = catLabel;
+      catTd.appendChild(badge);
+
+      const stockTd = document.createElement("td");
+      stockTd.className = "stock";
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "0";
+      input.value = String(stockVal);
+      input.addEventListener("input", () => {
+        saveStock(rowIndex, input.value);
+      });
+      stockTd.appendChild(input);
+
+      tr.appendChild(numTd);
+      tr.appendChild(nameTd);
+      tr.appendChild(productNumTd);
+      tr.appendChild(structureTd);
+      tr.appendChild(catTd);
+      tr.appendChild(stockTd);
+      tbody.appendChild(tr);
     });
+  }
+
+  document.getElementById("result-count").textContent =
+    "Showing " + indices.length + " of " + PRODUCTS.length + " reagents";
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.getAttribute("data-cat");
+    render();
   });
+});
+
+document.getElementById("sort-select").addEventListener("change", e => {
+  currentSort = e.target.value;
+  render();
+});
+
+render();
 </script>
 
 </body>
