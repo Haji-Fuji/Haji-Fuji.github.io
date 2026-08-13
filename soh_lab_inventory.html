@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phosphoramidite Inventory</title>
+<style>
+  :root {
+    --header-bg: #1f4e5f;
+    --header-fg: #ffffff;
+    --border: #d7dde1;
+    --row-alt: #f6f9fa;
+    --text: #222;
+    --muted: #666;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--text);
+    margin: 0;
+    padding: 40px 24px;
+    background: #fff;
+  }
+  h1 {
+    font-size: 24px;
+    margin: 0 0 6px 0;
+    color: var(--header-bg);
+  }
+  p.subtitle {
+    margin: 0 0 24px 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 900px;
+    line-height: 1.5;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1100px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  thead th {
+    background: var(--header-bg);
+    color: var(--header-fg);
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  tbody td {
+    border-bottom: 1px solid var(--border);
+    padding: 14px;
+    vertical-align: middle;
+    font-size: 14px;
+  }
+  tbody tr:nth-child(even) {
+    background: var(--row-alt);
+  }
+  td.num {
+    text-align: center;
+    color: var(--muted);
+    width: 36px;
+  }
+  td.name strong {
+    display: block;
+    font-size: 15px;
+  }
+  td.name span {
+    display: block;
+    font-style: italic;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  td.product-num {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+  td.structure {
+    text-align: center;
+    width: 300px;
+  }
+  td.structure img {
+    max-width: 280px;
+    max-height: 160px;
+    display: block;
+    margin: 0 auto 6px auto;
+  }
+  td.structure a {
+    font-size: 12px;
+    color: var(--header-bg);
+  }
+  td.stock {
+    width: 130px;
+  }
+  td.stock input {
+    width: 90%;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  a { color: var(--header-bg); }
+  footer {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    max-width: 900px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Phosphoramidite Inventory</h1>
+<p class="subtitle">
+  Structure images and product info pulled from
+  <a href="https://www.glenresearch.com" target="_blank" rel="noopener">Glen Research</a>.
+  Images below are loaded directly from glenresearch.com, so an internet connection is needed to see them.
+  Enter your stock count in the last column — it's remembered in this browser until you clear site data.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Product #</th>
+      <th>Chemical Structure</th>
+      <th>Number in Stock</th>
+    </tr>
+  </thead>
+  <tbody id="inventory-body">
+    <tr data-key="10-1953">
+      <td class="num">1</td>
+      <td class="name">
+        <strong>Biotin Phosphoramidite</strong>
+        <span>1-Dimethoxytrityloxy-2-(N-biotinyl-4-aminobutyl)-propyl-3-O-(2-cyanoethyl)-(N,N-diisopropyl)-phosphoramidite</span>
+      </td>
+      <td class="product-num">10-1953</td>
+      <td class="structure">
+        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1953_k1rxa33prakgwqmf.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="Biotin Phosphoramidite structure">
+        <a href="https://www.glenresearch.com/biotin-labeling/biotin-phosphoramidite10-1953.html" target="_blank" rel="noopener">Product page ↗</a>
+      </td>
+      <td class="stock"><input type="number" min="0" placeholder="0"></td>
+    </tr>
+    <tr data-key="10-1000">
+      <td class="num">2</td>
+      <td class="name">
+        <strong>dA-CE Phosphoramidite</strong>
+        <span>5'-Dimethoxytrityl-N-benzoyl-2'-deoxyAdenosine,3'-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite</span>
+      </td>
+      <td class="product-num">10-1000</td>
+      <td class="structure">
+        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1000_pfvptd8aq7y7yufb.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="dA-CE Phosphoramidite structure">
+        <a href="https://www.glenresearch.com/dna-phosphoramidites/da-ce-phosphoramidite10-1000.html" target="_blank" rel="noopener">Product page ↗</a>
+      </td>
+      <td class="stock"><input type="number" min="0" placeholder="0"></td>
+    </tr>
+    <tr data-key="10-1030">
+      <td class="num">3</td>
+      <td class="name">
+        <strong>dT-CE Phosphoramidite</strong>
+        <span>5'-Dimethoxytrityl-2'-deoxyThymidine,3'-[(2-cyanoethyl)-(N,N-diisopropyl)]-phosphoramidite</span>
+      </td>
+      <td class="product-num">10-1030</td>
+      <td class="structure">
+        <img src="https://www.glenresearch.com/media/catalog/product/1/0/10-1030_c25wwhg3z7dibpin.png?optimize=medium&fit=bounds&height=400&width=400&format=png" alt="dT-CE Phosphoramidite structure">
+        <a href="https://www.glenresearch.com/structural-studies/dt-ce-phosphoramidite10-1030.html" target="_blank" rel="noopener">Product page ↗</a>
+      </td>
+      <td class="stock"><input type="number" min="0" placeholder="0"></td>
+    </tr>
+  </tbody>
+</table>
+
+<footer>
+  Source: glenresearch.com. Stock counts are stored only in this browser's local storage on this device.
+</footer>
+
+<script>
+  // Persist stock counts locally so the page remembers values between visits.
+  const STORAGE_KEY = "phosphoramidite-stock-counts";
+  const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  document.querySelectorAll("#inventory-body tr").forEach(row => {
+    const key = row.getAttribute("data-key");
+    const input = row.querySelector("input");
+    if (stored[key] !== undefined) input.value = stored[key];
+    input.addEventListener("input", () => {
+      stored[key] = input.value;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    });
+  });
+</script>
+
+</body>
+</html>
